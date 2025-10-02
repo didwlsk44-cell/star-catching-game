@@ -163,6 +163,18 @@
             box-shadow: 0 0 0 0 var(--shadow-color);
         }
 
+        #difficulty-selection {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        #difficulty-selection button {
+            font-size: 14px;
+            padding: 12px 20px;
+        }
+
+
         /* 모바일 화면 대응 */
         @media (max-width: 600px) {
             #ui-panel {
@@ -178,6 +190,9 @@
             button {
                 font-size: 16px;
                 padding: 12px 24px;
+            }
+            #difficulty-selection {
+                flex-direction: column;
             }
         }
 
@@ -200,8 +215,12 @@
         <!-- 시작 화면 -->
         <div id="start-screen" class="screen">
             <h1>별똥별 잡기</h1>
-            <p>20초 동안 떨어지는 별을 클릭하세요!</p>
-            <button id="start-button">게임 시작</button>
+            <p>난이도를 선택하세요!</p>
+            <div id="difficulty-selection">
+                <button class="difficulty-btn" data-speed="easy">쉬움</button>
+                <button class="difficulty-btn" data-speed="normal">보통</button>
+                <button class="difficulty-btn" data-speed="hard">어려움</button>
+            </div>
         </div>
 
         <!-- 게임 종료 화면 -->
@@ -222,7 +241,7 @@
         const startScreen = document.getElementById('start-screen');
         const gameOverScreen = document.getElementById('game-over-screen');
         
-        const startButton = document.getElementById('start-button');
+        const difficultyButtons = document.querySelectorAll('.difficulty-btn');
         const restartButton = document.getElementById('restart-button');
         const finalScoreDisplay = document.getElementById('final-score');
 
@@ -231,6 +250,7 @@
         let timeLeft = 20;
         let timerId = null;
         let starIntervalId = null;
+        let gameSpeed = 'normal'; // 기본 속도
 
         // 게임 시작 함수
         function startGame() {
@@ -268,7 +288,24 @@
             // 랜덤 위치 및 속도 설정
             const gameAreaWidth = gameArea.offsetWidth;
             star.style.left = `${Math.random() * (gameAreaWidth - 30)}px`;
-            star.style.animationDuration = `${Math.random() * 3 + 5}s`; // 5~8초 사이의 속도
+
+            let minDuration, range;
+            switch (gameSpeed) {
+                case 'easy': // 7~10초
+                    minDuration = 7;
+                    range = 3;
+                    break;
+                case 'hard': // 3~5초
+                    minDuration = 3;
+                    range = 2;
+                    break;
+                case 'normal': // 5~8초
+                default:
+                    minDuration = 5;
+                    range = 3;
+                    break;
+            }
+            star.style.animationDuration = `${Math.random() * range + minDuration}s`;
 
             // 별 클릭 이벤트
             star.addEventListener('click', () => {
@@ -308,7 +345,13 @@
         }
 
         // 이벤트 리스너 등록
-        startButton.addEventListener('click', startGame);
+        difficultyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                gameSpeed = button.dataset.speed;
+                startGame();
+            });
+        });
+
         restartButton.addEventListener('click', startGame);
     </script>
 
