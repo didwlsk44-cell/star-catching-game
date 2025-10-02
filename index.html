@@ -268,7 +268,7 @@
             // 랜덤 위치 및 속도 설정
             const gameAreaWidth = gameArea.offsetWidth;
             star.style.left = `${Math.random() * (gameAreaWidth - 30)}px`;
-            star.style.animationDuration = `${Math.random() * 2 + 3}s`; // 3~5초 사이의 속도
+            star.style.animationDuration = `${Math.random() * 3 + 5}s`; // 5~8초 사이의 속도
 
             // 별 클릭 이벤트
             star.addEventListener('click', () => {
@@ -314,3 +314,4 @@
 
 </body>
 </html>
+
